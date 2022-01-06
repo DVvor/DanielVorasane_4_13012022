@@ -12,11 +12,11 @@ const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const close = document.querySelectorAll(".close"); //select element
-const firstInput = document.getElementById("first");
-const lastInput = document.getElementById("last");
+const firstnameInput = document.getElementById("first");
+const lastNameInput = document.getElementById("last");
 const emailInput = document.getElementById("email");
 const birthdateInput = document.getElementById("birthdate");
-const qtyInput = document.getElementById("quantity");
+const qtyInput = document.getElementById("quantity"); // Nombre de tournoi ayant participé l'utilisateur
 const location1 = document.getElementById("location1");
 const location2 = document.getElementById("location2");
 const location3 = document.getElementById("location3");
@@ -24,16 +24,17 @@ const location4 = document.getElementById("location4");
 const location5 = document.getElementById("location5");
 const location6 = document.getElementById("location6");
 const checkbox1 = document.getElementById("checkbox1");
-const btnValidate = document.querySelector("btn-submit");
+const btnValidation = document.querySelector(".btn-submit");
+const btnValidationBl = document.querySelector(".btn-submit-bl");
 const modalbg2 = document.querySelector(".bground2");
 const form = document.querySelector("form");
-const btnclose = document.querySelector(".btnclose");
+const btnCloseModal = document.querySelector(".btnclose");
 
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 close.forEach((btn) => btn.addEventListener("click", closeModal));
-btnclose.addEventListener("click", closeModal); 
+btnCloseModal.addEventListener("click", closeModal); 
 
 
 // launch modal form
@@ -41,22 +42,24 @@ function launchModal() {
   modalbg.style.display = "block";
 }
 
-// close modal form
+// Fermeture de la modale **********************************************
+
 function closeModal() {
-  modalbg.style.display = "none"; //element.add style . display: none.
+  modalbg.style.display = "none"; // ajoute un display: none à l'élément modalbg 
   modalbg2.style.display = "none";
 }
 
-function launchmodalvalidate() {
+function formValidationMessage() { // Lancement du message de validation du formulaire
   modalbg2.style.display = "block";
 }
 
-/* Function error message form*/
+/* Conditions validation du formulaire ************************************************/ 
 /* (1) Le champ Prénom a un minimum de 2 caractères / n'est pas vide */
-function firstForm() {
-  let value = firstInput.value.trim(); //.trim ne compte pas les espaces vides
-    if (value.length < 2) {
-      formData[0].setAttribute("data-error-visible","true");
+
+function firstnameInputIsValid() { 
+  let value = firstnameInput.value.trim(); //.trim permet de retirer les blancs en début et fin de chaîne
+    if (firstnameInput.value.length < 2) {
+      formData[0].setAttribute("data-error-visible","true"); // formData[0] cible le premier element formData de HTML
       formData[0].setAttribute("data-error","Veuillez saisir au moins 2 caractères");
       return false;
   } else {
@@ -65,11 +68,12 @@ function firstForm() {
     return true;
   }
 }
-formData[0].addEventListener("input", firstForm);
+formData[0].addEventListener("input", firstnameInputIsValid); // input = est déclenché de façon synchrone
 
 /*(2) Le champ du nom de famille a un minimum de 2 caractères / n'est pas vide */
-function lastForm() {
-  let value = lastInput.value.trim(); //.trim ne compte pas les espaces vides
+
+function lastNameInputIsValid() {
+  let value = lastNameInput.value.trim(); 
     if (value.length < 2) {
       formData[1].setAttribute("data-error-visible","true");
       formData[1].setAttribute("data-error","Veuillez saisir au moins 2 caractères");
@@ -80,12 +84,13 @@ function lastForm() {
     return true;
   }
 }
-formData[1].addEventListener("input", lastForm); // input last
+formData[1].addEventListener("input", lastNameInputIsValid); 
 
-/*(3) L'adresse électronique est valide*/
-function emailForm() {
+/* (3) L'adresse électronique est valide ********************************************/
+
+function emailInputIsValid() {
   let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (regex.test(emailInput.value ) == false) {
+    if (regex.test(emailInput.value) == false) {
       formData[2].setAttribute("data-error-visible","true");
       formData[2].setAttribute("data-error","Veuillez saisir un email valide");
       return false;
@@ -95,10 +100,11 @@ function emailForm() {
     return true;
   }
 }
-formData[2].addEventListener("input", emailForm);
+formData[2].addEventListener("input", emailInputIsValid);
 
-/* Le champs date de naissance n'est pas vide */
-function birthdateForm() {
+/* Le champs date de naissance n'est pas vide *************************************/
+
+function birthdateInputIsValid() {
   let value = birthdateInput.value; 
     if (value == "") {
       formData[3].setAttribute("data-error-visible","true");
@@ -110,11 +116,12 @@ function birthdateForm() {
     return true;
   }
 }
-formData[3].addEventListener("input", birthdateForm);
+formData[3].addEventListener("input", birthdateInputIsValid);
 
-/* Pour le nombre de concours, une valeur numérique est saisie. */
-function qtyForm() {
-  let value = qtyInput.value; //.trim ne compte pas les espaces vides
+/* Pour le nombre de concours, une valeur numérique est saisie. ******************/
+
+function qtyInputIsvalid() {
+  let value = qtyInput.value; 
     if (value == "")  {
       formData[4].setAttribute("data-error-visible","true");
       formData[4].setAttribute("data-error","Veuillez renseigner ce champs");
@@ -125,10 +132,11 @@ function qtyForm() {
     return true;
   }
 }
-formData[4].addEventListener("input", qtyForm);
+formData[4].addEventListener("input", qtyInputIsvalid);
 
-/* Un bouton radio est sélectionné ***********************************/
-function radioForm() {
+/* Un bouton radio est sélectionné ************************************************/
+
+function selectCity() {
   if (
     location1.checked ||
     location2.checked ||
@@ -147,13 +155,11 @@ function radioForm() {
       return false;
     } 
 }   
-formData[5].addEventListener("change", radioForm);
+formData[5].addEventListener("change", selectCity);
 
-// si un des boutons radio est sélectionné alors true 
+/* La case des conditions générales est cochée *************************************/
 
-/* La case des conditions générales est cochée */
-function conditionOfUSeForm() {
-  
+function conditionOfUSeIsChecked() {
   if (checkbox1.checked == false)  {
     formData[6].setAttribute("data-error-visible","true");
     formData[6].setAttribute("data-error","Veuillez accepter les conditions d'utilisation");
@@ -164,41 +170,41 @@ function conditionOfUSeForm() {
   return true;
   }
 }
-formData[6].addEventListener("change", conditionOfUSeForm);
+formData[6].addEventListener("change", conditionOfUSeIsChecked);
 
 
-/* toutes les conditions sont validées ************/
-
+/* Toutes les conditions sont validées ******************************************/
 
 function validate(event) { // HMTL l.63
   event.preventDefault();
-  firstForm(); 
-  lastForm();
-  emailForm();
-  birthdateForm();
-  qtyForm();
-  radioForm();
-  conditionOfUSeForm();
+  // firstnameInputIsValid(); 
+  // lastNameInputIsValid();
+  // emailInputIsValid();
+  // birthdateInputIsValid();
+  // qtyInputIsvalid();
+  // selectCity();
+  // conditionOfUSeIsChecked();
   if (
-     firstForm() == true &&
-    //  lastForm() == true &&
-    //  emailForm() == true &&
-    //  birthdateForm() == true && 
-    //  qtyForm() == true && 
-    //  radioForm() == true &&
-    conditionOfUSeForm() == true
+    firstnameInputIsValid() == true &&
+    lastNameInputIsValid() == true &&
+    emailInputIsValid() == true &&
+    birthdateInputIsValid() == true &&
+    qtyInputIsvalid() == true &
+    selectCity() == true && 
+    conditionOfUSeIsChecked() == true
     ) 
   {
     form.reset();
+    btnValidationBl.setAttribute("data-error-visible","false");
     closeModal();
-    launchmodalvalidate();
-
-//garder bgground content 
-//Fermer le formulaire
-
+    formValidationMessage();
+  
+  } else {
+    // alert("veuillez remplir les champs vides")
+    btnValidationBl.setAttribute("data-error-visible","true");
+    btnValidationBl.setAttribute("data-error","Veuillez remplir les champs manquants");
   }
-
-
+  // btnValidation.addEventListener("click", validate);
 }  
 
 /*
