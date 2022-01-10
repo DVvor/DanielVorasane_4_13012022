@@ -42,6 +42,11 @@ function launchModal() {
   modalbg.style.display = "block";
 }
 
+function resetGlobalErrorMessage() {
+  btnValidationBl.setAttribute("data-error-visible","false");
+  btnValidationBl.removeAttribute("data-error");
+}
+
 // Fermeture de la modale **********************************************
 
 function closeModal() {
@@ -55,88 +60,109 @@ function formValidationMessage() { // Lancement du message de validation du form
 
 /* Conditions validation du formulaire ************************************************/ 
 /* (1) Le champ Prénom a un minimum de 2 caractères / n'est pas vide */
+let isFirstnameValid = false;
 
 function firstnameInputIsValid() { 
+  resetGlobalErrorMessage();
+
   let value = firstnameInput.value.trim(); //.trim permet de retirer les blancs en début et fin de chaîne
-    if (firstnameInput.value.length < 2) {
+    if (value.length < 2) {
       formData[0].setAttribute("data-error-visible","true"); // formData[0] cible le premier element formData de HTML
       formData[0].setAttribute("data-error","Veuillez saisir au moins 2 caractères");
-      return false;
+      isFirstnameValid = false;
   } else {
     formData[0].setAttribute("data-error-visible","false");
     formData[0].removeAttribute("data-error");
-    return true;
+    isFirstnameValid = true;
   }
 }
 formData[0].addEventListener("input", firstnameInputIsValid); // input = est déclenché de façon synchrone
 
 /*(2) Le champ du nom de famille a un minimum de 2 caractères / n'est pas vide */
+let isLastnameValid = false;
 
 function lastNameInputIsValid() {
+  resetGlobalErrorMessage();
+
   let value = lastNameInput.value.trim(); 
     if (value.length < 2) {
       formData[1].setAttribute("data-error-visible","true");
       formData[1].setAttribute("data-error","Veuillez saisir au moins 2 caractères");
-      return false;
+      isLastnameValid = false;
+      // return false;
   } else {
     formData[1].setAttribute("data-error-visible","false");
     formData[1].removeAttribute("data-error");
-    return true;
+    isLastnameValid = true;
+    // return true;
   }
 }
 formData[1].addEventListener("input", lastNameInputIsValid); 
 
 /* (3) L'adresse électronique est valide ********************************************/
+let isEmailValid = false;
+
 
 function emailInputIsValid() {
+  resetGlobalErrorMessage();
+
   let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (regex.test(emailInput.value) == false) {
       formData[2].setAttribute("data-error-visible","true");
       formData[2].setAttribute("data-error","Veuillez saisir un email valide");
-      return false;
+      isEmailValid = false;
   } else {
     formData[2].setAttribute("data-error-visible","false");
     formData[2].removeAttribute("data-error");
-    return true;
+    isEmailValid = true;
   }
 }
 formData[2].addEventListener("input", emailInputIsValid);
 
 /* Le champs date de naissance n'est pas vide *************************************/
+let isBirthdateValid = false;
 
 function birthdateInputIsValid() {
+  resetGlobalErrorMessage();
+
   let value = birthdateInput.value; 
     if (value == "") {
       formData[3].setAttribute("data-error-visible","true");
-      formData[3].setAttribute("data-error","Veuillez renseigner une date de naissance");
-      return false;
+      formData[3].setAttribute("data-error","Veuillez renseigner une date de naissance valide ");
+      isBirthdateValid = false;
   } else {
     formData[3].setAttribute("data-error-visible","false");
     formData[3].removeAttribute("data-error");
-    return true;
+    isBirthdateValid = true;
   }
 }
 formData[3].addEventListener("input", birthdateInputIsValid);
 
 /* Pour le nombre de concours, une valeur numérique est saisie. ******************/
+let isQtyValid = false;
 
 function qtyInputIsvalid() {
+  resetGlobalErrorMessage();
+
   let value = qtyInput.value; 
     if (value == "")  {
       formData[4].setAttribute("data-error-visible","true");
-      formData[4].setAttribute("data-error","Veuillez renseigner ce champs");
-      return false;
+      formData[4].setAttribute("data-error","Veuillez renseigner ce champ.");
+      isQtyValid = false;
   } else {
     formData[4].setAttribute("data-error-visible","false");
     formData[4].removeAttribute("data-error");
-    return true;
+    isQtyValid = true;
   }
 }
 formData[4].addEventListener("input", qtyInputIsvalid);
 
 /* Un bouton radio est sélectionné ************************************************/
+let isSelectCityValid = false;
+
 
 function selectCity() {
+
   if (
     location1.checked ||
     location2.checked ||
@@ -147,27 +173,30 @@ function selectCity() {
     ){
       formData[5].setAttribute("data-error-visible","false");
       formData[5].removeAttribute("data-error");
-      return true;
+      isSelectCityValid = true;
     } 
     else {
       formData[5].setAttribute("data-error-visible","true");
       formData[5].setAttribute("data-error","Veuillez sélectionner un tournoi");
-      return false;
+      isSelectCityValid = false;
     } 
 }   
 formData[5].addEventListener("change", selectCity);
 
 /* La case des conditions générales est cochée *************************************/
+let isConditionOfUSeValid = false;
 
 function conditionOfUSeIsChecked() {
+  resetGlobalErrorMessage();
+
   if (checkbox1.checked == false)  {
     formData[6].setAttribute("data-error-visible","true");
     formData[6].setAttribute("data-error","Veuillez accepter les conditions d'utilisation");
-    return false;
+    isConditionOfUSeValid = false;
   } else {
   formData[6].setAttribute("data-error-visible","false");
   formData[6].removeAttribute("data-error");
-  return true;
+  isConditionOfUSeValid = true;
   }
 }
 formData[6].addEventListener("change", conditionOfUSeIsChecked);
@@ -177,34 +206,26 @@ formData[6].addEventListener("change", conditionOfUSeIsChecked);
 
 function validate(event) { // HMTL l.63
   event.preventDefault();
-  // firstnameInputIsValid(); 
-  // lastNameInputIsValid();
-  // emailInputIsValid();
-  // birthdateInputIsValid();
-  // qtyInputIsvalid();
-  // selectCity();
-  // conditionOfUSeIsChecked();
+  selectCity();
   if (
-    firstnameInputIsValid() == true &&
-    lastNameInputIsValid() == true &&
-    emailInputIsValid() == true &&
-    birthdateInputIsValid() == true &&
-    qtyInputIsvalid() == true &
-    selectCity() == true && 
-    conditionOfUSeIsChecked() == true
-    ) 
-  {
+    isFirstnameValid &&
+    isLastnameValid &&
+    isEmailValid &&
+    isBirthdateValid &&
+    isQtyValid &&
+    isSelectCityValid &&
+    isConditionOfUSeValid
+  ) {
+    
     form.reset();
-    btnValidationBl.setAttribute("data-error-visible","false");
     closeModal();
     formValidationMessage();
-  
+    return true;
   } else {
-    // alert("veuillez remplir les champs vides")
     btnValidationBl.setAttribute("data-error-visible","true");
-    btnValidationBl.setAttribute("data-error","Veuillez remplir les champs manquants");
+    btnValidationBl.setAttribute("data-error","Votre inscription n'est pas valide. Veuillez renseigner les informations manquantes.");
+    return false;
   }
-  // btnValidation.addEventListener("click", validate);
 }  
 
 /*
