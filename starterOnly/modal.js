@@ -65,10 +65,11 @@ let isFirstnameValid = false;
 function firstnameInputIsValid() { 
   resetGlobalErrorMessage();
 
+  let regex = /^[a-zA-ZÀ-ÿ\ ]+$/; // uniquement des lettres minuscules, majuscules avec ou sans accent. Avec un espace pour les noms composés
   let value = firstnameInput.value.trim(); //.trim permet de retirer les blancs en début et fin de chaîne
-    if (value.length < 2) {
+    if (value.length < 2 || regex.test(value) == false) {
       formData[0].setAttribute("data-error-visible","true"); // formData[0] cible le premier element formData de HTML
-      formData[0].setAttribute("data-error","Veuillez saisir au moins 2 caractères");
+      formData[0].setAttribute("data-error","Le prénom doit contenir au moins 2 caractères (sans caractères spéciaux).");
       isFirstnameValid = false;
   } else {
     formData[0].setAttribute("data-error-visible","false");
@@ -84,10 +85,11 @@ let isLastnameValid = false;
 function lastNameInputIsValid() {
   resetGlobalErrorMessage();
 
+  let regex = /^[A-Za-zÀ-ÿ\ ]+$/;
   let value = lastNameInput.value.trim(); 
-    if (value.length < 2) {
+    if (value.length < 2 || regex.test(value) == false) {
       formData[1].setAttribute("data-error-visible","true");
-      formData[1].setAttribute("data-error","Veuillez saisir au moins 2 caractères");
+      formData[1].setAttribute("data-error","Le nom doit contenir au moins 2 caractères (sans caractères spéciaux).");
       isLastnameValid = false;
       // return false;
   } else {
@@ -109,7 +111,7 @@ function emailInputIsValid() {
   let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (regex.test(emailInput.value) == false) {
       formData[2].setAttribute("data-error-visible","true");
-      formData[2].setAttribute("data-error","Veuillez saisir un email valide");
+      formData[2].setAttribute("data-error","Veuillez indiquer un email valide.");
       isEmailValid = false;
   } else {
     formData[2].setAttribute("data-error-visible","false");
@@ -128,7 +130,7 @@ function birthdateInputIsValid() {
   let value = birthdateInput.value; 
     if (value == "") {
       formData[3].setAttribute("data-error-visible","true");
-      formData[3].setAttribute("data-error","Veuillez renseigner une date de naissance valide ");
+      formData[3].setAttribute("data-error","La date de naissance n'est pas valide.");
       isBirthdateValid = false;
   } else {
     formData[3].setAttribute("data-error-visible","false");
@@ -147,7 +149,7 @@ function qtyInputIsvalid() {
   let value = qtyInput.value; 
     if (value == "")  {
       formData[4].setAttribute("data-error-visible","true");
-      formData[4].setAttribute("data-error","Veuillez renseigner ce champ.");
+      formData[4].setAttribute("data-error","Veuillez indiquer le nombre de tournois auxquels vous avez déjà participé.");
       isQtyValid = false;
   } else {
     formData[4].setAttribute("data-error-visible","false");
@@ -177,7 +179,7 @@ function selectCity() {
     } 
     else {
       formData[5].setAttribute("data-error-visible","true");
-      formData[5].setAttribute("data-error","Veuillez sélectionner un tournoi");
+      formData[5].setAttribute("data-error","Veuillez sélectionner un tournoi.");
       isSelectCityValid = false;
     } 
 }   
@@ -191,7 +193,7 @@ function conditionOfUSeIsChecked() {
 
   if (checkbox1.checked == false)  {
     formData[6].setAttribute("data-error-visible","true");
-    formData[6].setAttribute("data-error","Veuillez accepter les conditions d'utilisation");
+    formData[6].setAttribute("data-error","Veuillez accepter les conditions d'utilisation.");
     isConditionOfUSeValid = false;
   } else {
   formData[6].setAttribute("data-error-visible","false");
@@ -206,7 +208,14 @@ formData[6].addEventListener("change", conditionOfUSeIsChecked);
 
 function validate(event) { // HMTL l.63
   event.preventDefault();
+  firstnameInputIsValid();
+  lastNameInputIsValid();
+  emailInputIsValid();
+  birthdateInputIsValid();
   selectCity();
+  qtyInputIsvalid();
+  conditionOfUSeIsChecked()
+  
   if (
     isFirstnameValid &&
     isLastnameValid &&
