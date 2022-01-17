@@ -69,7 +69,7 @@ function firstnameInputIsValid() {
   let value = firstnameInput.value.trim(); //.trim permet de retirer les blancs en début et fin de chaîne
     if (value.length < 2 || regex.test(value) == false) {
       formData[0].setAttribute("data-error-visible","true"); // formData[0] cible le premier element formData de HTML
-      formData[0].setAttribute("data-error","Le prénom doit contenir au moins 2 caractères (sans caractères spéciaux).");
+      formData[0].setAttribute("data-error","Le prénom doit contenir au moins 2 lettres (sans caractères spéciaux).");
       isFirstnameValid = false;
   } else {
     formData[0].setAttribute("data-error-visible","false");
@@ -89,7 +89,7 @@ function lastNameInputIsValid() {
   let value = lastNameInput.value.trim(); 
     if (value.length < 2 || regex.test(value) == false) {
       formData[1].setAttribute("data-error-visible","true");
-      formData[1].setAttribute("data-error","Le nom doit contenir au moins 2 caractères (sans caractères spéciaux).");
+      formData[1].setAttribute("data-error","Le nom doit contenir au moins 2 lettres (sans caractères spéciaux).");
       isLastnameValid = false;
       // return false;
   } else {
